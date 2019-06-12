@@ -1,6 +1,8 @@
 <template>
   <div>
-    {{ outputList }}
+    <p v-for="(line, key) in outputList" :key="key">
+      {{ line }}
+  </p>
   </div>
 </template>
 
@@ -21,6 +23,15 @@ export default {
   props: {
     grid: Object,
     ships: Array
+  },
+  watch: {
+    ships (newShips) {
+      this.runShips()
+    },
+    grid (newGrid) {
+      this.createGrid()
+      this.runShips()
+    }
   },
   methods: {
     createGrid () {
@@ -75,44 +86,46 @@ export default {
       return true
     },
     startLocation (coordiantesAndDirection) {
+      this.lost = false
       let startX = parseInt(coordiantesAndDirection.split(' ')[0])
       let startY = parseInt(coordiantesAndDirection.split(' ')[1])
       let startDirection = coordiantesAndDirection.slice(-1)
-      this.lost = false
       this.x = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startX : null
       this.y = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startY : null
       this.direction = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startDirection : null
     },
     forward () {
-      switch (this.direction) {
-        case 'N':
-          if (this.checkMove(this.x, this.y + 1, this.direction)) {
-            this.y = this.y + 1
-          } else {
-            return false
-          }
-          break
-        case 'S':
-          if (this.checkMove(this.x, this.y - 1, this.direction)) {
-            this.y = this.y - 1
-          } else {
-            return false
-          }
-          break
-        case 'E':
-          if (this.checkMove(this.x + 1, this.y, this.direction)) {
-            this.x = this.x + 1
-          } else {
-            return false
-          }
-          break
-        case 'W':
-          if (this.checkMove(this.x - 1, this.y, this.direction)) {
-            this.x = this.x - 1
-          } else {
-            return false
-          }
-          break
+      if (this.newGrid[this.x][this.y][this.direction]) {
+        switch (this.direction) {
+          case 'N':
+            if (this.checkMove(this.x, this.y + 1, this.direction)) {
+              this.y = this.y + 1
+            } else {
+              return false
+            }
+            break
+          case 'S':
+            if (this.checkMove(this.x, this.y - 1, this.direction)) {
+              this.y = this.y - 1
+            } else {
+              return false
+            }
+            break
+          case 'E':
+            if (this.checkMove(this.x + 1, this.y, this.direction)) {
+              this.x = this.x + 1
+            } else {
+              return false
+            }
+            break
+          case 'W':
+            if (this.checkMove(this.x - 1, this.y, this.direction)) {
+              this.x = this.x - 1
+            } else {
+              return false
+            }
+            break
+        }
       }
     },
     turnLeft () {

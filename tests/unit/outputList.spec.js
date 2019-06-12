@@ -27,6 +27,7 @@ describe('OutputList.vue', () => {
 
   outputList.setProps({ grid: grid })
   outputList.setProps({ ships: ships })
+  outputList.vm.createGrid()
 
   describe('createGrid', () => {
     it('should create a grid with the properties passed into the component', () => {

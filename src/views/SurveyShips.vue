@@ -1,12 +1,24 @@
 <template>
   <div class="SurveyShips">
-    SurveyShips
+    <OutputList :grid="grid" :ships="ships"/>
   </div>
 </template>
 
 <script>
+import OutputList from '@/components/OutputList.vue'
+
+import { mapGetters } from 'vuex'
 
 export default {
-  name: 'SurveyShips'
+  name: 'SurveyShips',
+  components: {
+    OutputList
+  },
+  computed: {
+    ...mapGetters([
+      'ships',
+      'grid'
+    ])
+  }
 }
 </script>
