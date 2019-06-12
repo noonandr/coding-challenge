@@ -2,6 +2,8 @@ import { shallowMount } from '@vue/test-utils'
 import { expect } from 'chai'
 import OutputList from '@/components/OutputList.vue'
 
+/* eslint-disable no-unused-expressions */
+
 describe('OutputList.vue', () => {
   const outputList = shallowMount(OutputList)
   const grid = {
@@ -27,7 +29,14 @@ describe('OutputList.vue', () => {
   outputList.setProps({ ships: ships })
 
   describe('createGrid', () => {
-    outputList.vm.createGrid()
+    it('should create a grid with the properties passed into the component', () => {
+      outputList.vm.createGrid()
+      expect(outputList.vm.newGrid).to.not.be.empty
+      expect(outputList.vm.newGrid[0][0]['N']).to.equal(true)
+      expect(outputList.vm.newGrid[0][3]['N']).to.equal(true)
+      expect(outputList.vm.newGrid[5][0]['N']).to.equal(true)
+      expect(outputList.vm.newGrid[5][3]['N']).to.equal(true)
+    })
   })
 
   describe('startLocation', () => {
@@ -36,6 +45,30 @@ describe('OutputList.vue', () => {
       expect(outputList.vm.x).to.equal(1)
       expect(outputList.vm.y).to.equal(2)
       expect(outputList.vm.direction).to.equal('N')
+    })
+    it('should set the x, y and direction to expected values if on the edge of the grid', () => {
+      outputList.vm.startLocation('5 3 N')
+      expect(outputList.vm.x).to.equal(5)
+      expect(outputList.vm.y).to.equal(3)
+      expect(outputList.vm.direction).to.equal('N')
+    })
+    it('should set the values for x, y and direction to null if statrting outside of the maxium size of cooridates', () => {
+      outputList.vm.startLocation('51 51 N')
+      expect(outputList.vm.x).to.equal(null)
+      expect(outputList.vm.y).to.equal(null)
+      expect(outputList.vm.direction).to.equal(null)
+    })
+    it('should set the values for x, y and direction to null if statrting outside of the grid', () => {
+      outputList.vm.startLocation('6 3 N')
+      expect(outputList.vm.x).to.equal(null)
+      expect(outputList.vm.y).to.equal(null)
+      expect(outputList.vm.direction).to.equal(null)
+    })
+    it('should set the values for x, y and direction to null if statrting outside of the grid', () => {
+      outputList.vm.startLocation('5 4 N')
+      expect(outputList.vm.x).to.equal(null)
+      expect(outputList.vm.y).to.equal(null)
+      expect(outputList.vm.direction).to.equal(null)
     })
   })
 
@@ -131,7 +164,61 @@ describe('OutputList.vue', () => {
   })
 
   describe('checkMove', () => {
-    it('should move if move is allowed', () => {
+    it('if a valid move is passed it should return true', () => {
+      outputList.vm.startLocation('5 3 S')
+      expect(outputList.vm.checkMove(4, 3, 'S')).to.be.true
+    })
+    it('if an invalid move is passed it should be retrun false', () => {
+      outputList.vm.startLocation('5 3 N')
+      expect(outputList.vm.checkMove(6, 3, 'N')).to.be.false
+    })
+    it('if moving off the bottom right edge of the board facing W it should return false and set west and south for that point to false', () => {
+      outputList.vm.startLocation('0 0 W')
+      expect(outputList.vm.checkMove(-1, 0, 'W')).to.be.false
+      expect(outputList.vm.newGrid[0][0]['S']).to.equal(false)
+      expect(outputList.vm.newGrid[0][0]['W']).to.equal(false)
+    })
+    it('if moving off the bottom right edge of the board facing S it should return false and set west and south for that point to false', () => {
+      outputList.vm.startLocation('0 0 S')
+      expect(outputList.vm.checkMove(0, -1, 'S')).to.be.false
+      expect(outputList.vm.newGrid[0][0]['S']).to.equal(false)
+      expect(outputList.vm.newGrid[0][0]['W']).to.equal(false)
+    })
+    it('if moving off the bottom left edge of the board facing E it should return false and set west and south for that point to false', () => {
+      outputList.vm.startLocation('5 0 E')
+      expect(outputList.vm.checkMove(6, 0, 'E')).to.be.false
+      expect(outputList.vm.newGrid[5][0]['S']).to.equal(false)
+      expect(outputList.vm.newGrid[5][0]['E']).to.equal(false)
+    })
+    it('if moving off the bottom left edge of the board facing S it should return false and set west and south for that point to false', () => {
+      outputList.vm.startLocation('5 0 S')
+      expect(outputList.vm.checkMove(0, -1, 'S')).to.be.false
+      expect(outputList.vm.newGrid[5][0]['S']).to.equal(false)
+      expect(outputList.vm.newGrid[5][0]['E']).to.equal(false)
+    })
+    it('if moving off the bottom right edge of the board facing W it should return false and set west and south for that point to false', () => {
+      outputList.vm.startLocation('0 3 W')
+      expect(outputList.vm.checkMove(-1, 3, 'W')).to.be.false
+      expect(outputList.vm.newGrid[0][3]['N']).to.equal(false)
+      expect(outputList.vm.newGrid[0][3]['W']).to.equal(false)
+    })
+    it('if moving off the bottom right edge of the board facing S it should return false and set west and south for that point to false', () => {
+      outputList.vm.startLocation('0 3 W')
+      expect(outputList.vm.checkMove(0, -1, 'N')).to.be.false
+      expect(outputList.vm.newGrid[0][3]['N']).to.equal(false)
+      expect(outputList.vm.newGrid[0][3]['W']).to.equal(false)
+    })
+    it('if moving off the bottom right edge of the board facing W it should return false and set west and south for that point to false', () => {
+      outputList.vm.startLocation('5 3 W')
+      expect(outputList.vm.checkMove(6, 3, 'W')).to.be.false
+      expect(outputList.vm.newGrid[5][3]['N']).to.equal(false)
+      expect(outputList.vm.newGrid[5][3]['W']).to.equal(false)
+    })
+    it('if moving off the bottom right edge of the board facing S it should return false and set west and south for that point to false', () => {
+      outputList.vm.startLocation('5 3 W')
+      expect(outputList.vm.checkMove(5, 4, 'N')).to.be.false
+      expect(outputList.vm.newGrid[5][3]['N']).to.equal(false)
+      expect(outputList.vm.newGrid[5][3]['W']).to.equal(false)
     })
   })
 

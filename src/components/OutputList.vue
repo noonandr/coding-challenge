@@ -13,7 +13,7 @@ export default {
       direction: null,
       compass: 'NESW',
       outputList: [],
-      newGrid: this.grid,
+      newGrid: [],
       shipsList: this.ships,
       lost: false
     }
@@ -75,10 +75,13 @@ export default {
       return true
     },
     startLocation (coordiantesAndDirection) {
+      let startX = parseInt(coordiantesAndDirection.split(' ')[0])
+      let startY = parseInt(coordiantesAndDirection.split(' ')[1])
+      let startDirection = coordiantesAndDirection.slice(-1)
       this.lost = false
-      this.x = parseInt(coordiantesAndDirection.split(' ')[0])
-      this.y = parseInt(coordiantesAndDirection.split(' ')[1])
-      this.direction = coordiantesAndDirection.slice(-1)
+      this.x = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startX : null
+      this.y = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startY : null
+      this.direction = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startDirection : null
     },
     forward () {
       switch (this.direction) {
