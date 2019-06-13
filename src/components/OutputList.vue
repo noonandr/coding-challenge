@@ -8,6 +8,7 @@
 
 <script>
 export default {
+  name: 'OutputList',
   data () {
     return {
       x: null,
@@ -26,9 +27,6 @@ export default {
   },
   watch: {
     ships (newShips) {
-      this.runShips()
-    },
-    grid (newGrid) {
       this.createGrid()
       this.runShips()
     }

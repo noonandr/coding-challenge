@@ -33,19 +33,14 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    mutateGrid (state, payload) {
-      state.grid = payload
-    },
-    mutateShips (state, payload) {
-      state.ships = payload
+    mutateGrid (state, surveyShips) {
+      state.grid = surveyShips.grid
+      state.ships = surveyShips.ships
     }
   },
   actions: {
-    updateGrid ({ commit }, { graphConfig }) {
-      commit('setGraphConfig', graphConfig)
-    },
-    increment (context) {
-      context.commit('increment')
+    updateSurveyShips ({ commit }, { surveyShips }) {
+      commit('mutateGrid', surveyShips)
     }
   }
 })
