@@ -1,7 +1,8 @@
 <template>
   <div class="SurveyShips">
+    <h1>Survey Ships</h1>
     <ShipInputs/>
-    <OutputList :grid="grid" :ships="ships"/>
+    <OutputList/>
   </div>
 </template>
 
@@ -25,3 +26,14 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+.SurveyShips {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  margin: 20px;
+}
+</style>

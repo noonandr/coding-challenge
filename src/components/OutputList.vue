@@ -1,7 +1,8 @@
 <template>
   <div>
+    <h3>Ship Output List</h3>
     <p v-for="(line, key) in outputList" :key="key">
-      {{ line }}
+      <span v-text="line ? line : ''"></span>
   </p>
   </div>
 </template>
@@ -18,18 +19,22 @@ export default {
       outputList: [],
       newGrid: [],
       shipsList: this.ships,
-      lost: false
+      lost: false,
+      ships: [],
+      grid: {}
     }
   },
-  props: {
-    grid: Object,
-    ships: Array
-  },
-  watch: {
-    ships (newShips) {
-      this.createGrid()
-      this.runShips()
-    }
+  mounted () {
+    this.$store.subscribe((mutation, state) => {
+      switch (mutation.type) {
+        case 'mutateShips':
+          this.ships = state.ships
+          this.grid = state.grid
+          this.outputList = []
+          this.createGrid()
+          this.runShips()
+      }
+    })
   },
   methods: {
     createGrid () {
@@ -88,9 +93,9 @@ export default {
       let startX = parseInt(coordiantesAndDirection.split(' ')[0])
       let startY = parseInt(coordiantesAndDirection.split(' ')[1])
       let startDirection = coordiantesAndDirection.slice(-1)
-      this.x = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startX : null
-      this.y = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startY : null
-      this.direction = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startDirection : null
+      this.x = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startX : ''
+      this.y = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startY : ''
+      this.direction = startX < 50 && startY < 50 && startX <= this.grid.width && startY <= this.grid.height ? startDirection : ''
     },
     forward () {
       if (this.newGrid[this.x][this.y][this.direction]) {
